@@ -1,0 +1,10 @@
+<div tal:define="countries python: ' '.join(
+                              'geoportlet-%s' % country.lower() for
+                              country in view.data.countries);
+                 languages python: ' '.join(
+                              'geoportlet-%s' % country for
+                              country in view.data.languages);
+                 css_class python: ' '.join(filter(
+                              None, (countries, languages))) or None"
+     tal:attributes="class css_class"
+     tal:content="structure view/renderer/render" />

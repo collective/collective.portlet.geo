@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<portlets xmlns:i18n="http://namespaces.zope.org/i18n"
+          i18n:domain="collective.portlet.geo">
+
+  <portlet
+      addview="collective.portlet.geo.GeoPortlet"
+      title="Geoportlet"
+      description="Wrap any Plone portlet with geolocation or language negotiation."
+      />
+
+</portlets>

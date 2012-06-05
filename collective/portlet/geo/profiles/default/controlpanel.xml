@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<object
+    name="portal_controlpanel"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.portlet.geo"
+    purge="False">
+
+    <configlet
+        title="Geoportlet"
+        action_id="geoportlet"
+        appId="collective.portlet.geo"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@geoportlet-settings"
+        icon_expr="string:$portal_url/link_icon.png"
+        visible="True"
+        i18n:attributes="title">
+      <permission>Manage portal</permission>
+    </configlet>
+
+</object>

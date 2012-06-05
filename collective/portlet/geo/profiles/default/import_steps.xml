@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<import-steps>
+  <import-step id="collective.portlet.geo.create_update_token" version="1"
+               handler="collective.portlet.geo.setuphandlers.create_update_token"
+               title="Create 'Update URL'">
+    <dependency step="registry" />
+  </import-step>
+</import-steps>
