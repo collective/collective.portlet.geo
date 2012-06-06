@@ -20,4 +20,10 @@ def create_update_token(context):
         field = ISettings[name]
         persistent_field = queryAdapter(field, IPersistentField)
         key = ISettings.__identifier__ + "." + field.__name__
-        registry.records.setdefault(key, Record(persistent_field, value))
+
+        record = registry.records.get(key)
+        if record is None:
+            registry.records[key] = Record(persistent_field, value)
+        else:
+            if not record.value:
+                record.value = value
