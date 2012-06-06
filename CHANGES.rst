@@ -1,7 +1,8 @@
 Changelog
 =========
 
-In next release ...
+1.0.1 (2012-06-06)
+------------------
 
 - Fixed a compatibility issue with Python 2.6.
 
