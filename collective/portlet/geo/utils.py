@@ -3,11 +3,15 @@ class CommentedFile:
         self.f = f
         self.commentstring = commentstring
 
+    def __iter__(self):
+        return self
+
+    def close(self):
+        self.f.close()
+
     def next(self):
         line = self.f.next()
         while line.startswith(self.commentstring):
             line = self.f.next()
         return line
 
-    def __iter__(self):
-        return self
