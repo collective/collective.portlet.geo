@@ -103,9 +103,14 @@ class ControlPanelEditForm(controlpanel.RegistryEditForm):
                 _(u"An error occurred: ${error}.",
                   mapping={'error': exc}), "info")
         else:
+            try:
+                count = '{0:,}'.format(count)
+            except ValueError:
+                pass
+
             IStatusMessage(self.request).addStatusMessage(
                 _(u"Database updated (${count} records read).",
-                  mapping={'count': '{0:,}'.format(count)}),
+                  mapping={'count': count}),
                 "info")
 
     buttons.prefix = ""
