@@ -3,6 +3,8 @@ Changelog
 
 In next release ...
 
+- Fixed a compatibility issue with Python 2.6.
+
 - Fixed an issue where the geolocation database location would not get
   a default value.
 

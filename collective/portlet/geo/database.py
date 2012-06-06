@@ -49,14 +49,14 @@ class Software77GeoDatabase(object):
     def update(self, url=None):
         if url:
             with closing(urllib.urlopen(url)) as response:
-                resource = StringIO(response.read())
+                body = response.read()
+            resource = StringIO(body)
         else:
             resource = open(self._test_path, 'rb')
 
         database = []
-        with gzip.GzipFile(fileobj=resource) as stream:
-            stream = CommentedFile(stream)
-
+        stream = gzip.GzipFile(fileobj=resource)
+        with closing(CommentedFile(stream)) as stream:
             for row in csv.reader(stream, delimiter=',', quotechar='"'):
                 if len(row) >= 6:
                     database.append(row)
