@@ -36,16 +36,23 @@
       edit_permission="plone.app.portlets.ManagePortlets"
       renderer=".portlets.GeoPortletRenderer"
       addview=".portlets.GeoPortletAddForm"
-      editview=".portlets.GeoPortletEditForm"
+      editview=".portlets.GeoPortletEditAssignmentForm"
       />
 
-  <!-- The breadcrumbs -->
-  <!-- <browser:viewlet -->
-  <!--     name="collective.portlet.geo.viewlets.edit" -->
-  <!--     manager=".interfaces.IAboveContent" -->
-  <!--     class=".common.PathBarViewlet" -->
-  <!--     permission="zope2.View" -->
-  <!--     /> -->
+  <browser:viewlet
+      name="collective.portlet.geo.viewlets.edit-link"
+      view=".portlets.IEditAssignmentView"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      permission="plone.app.portlets.ManagePortlets"
+      template="link.pt"
+      />
+
+  <browser:page
+      name="edit-geoportlet"
+      for="plone.portlets.interfaces.IPortletDataProvider"
+      class=".portlets.GeoPortletEditForm"
+      permission="plone.app.portlets.ManagePortlets"
+      />
 
   <adapter
       factory=".portlets.GeoPortletPermissionChecker"

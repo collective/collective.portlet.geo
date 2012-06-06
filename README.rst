@@ -10,10 +10,6 @@ and/or HTTP language accept strings. You can use it to segment the
 audience for a portlet into particular countries or language groups,
 e.g. China and Mandarin.
 
-Note that once created, the country and language settings for a
-particular geoportlet cannot be changed. Plone's portlets system makes
-it difficult to provide this functionality.
-
 It uses the geolocation database provided by http://Software77.net.
 
 Compatibility: Plone 4+.

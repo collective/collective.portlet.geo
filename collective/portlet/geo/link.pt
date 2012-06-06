@@ -1,0 +1,12 @@
+<dl class="portalMessage info" i18n:domain="collective.portlet.geo">
+  <dt i18n:translate="">Info</dt>
+  <dd i18n:translate="">
+    This portlet is configured with a geolocation and/or language filter.
+    To change these options, visit
+    <a i18n:name="link"
+       i18n:translate=""
+       tal:attributes="href string:${view/context/absolute_url}/edit-geoportlet?referer=${request/referer|nothing}">
+      edit geoportlet
+      </a>.
+  </dd>
+</dl>

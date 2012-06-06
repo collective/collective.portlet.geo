@@ -1,6 +1,6 @@
 from zope.interface import implements
 from zope.interface import alsoProvides
-from zope.interface import providedBy
+from zope.interface import Interface
 from zope import schema
 from zope.formlib import form
 from zope.component import getUtility
@@ -13,24 +13,25 @@ from zope.traversing.interfaces import ITraversable
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.component import adapts
 from zope.security.interfaces import IPermission
-from zope.formlib.interfaces import IForm as IFormlibForm
-from zope.formlib.interfaces import ISubPageForm
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
-from plone.app.portlets.browser.interfaces import IPortletAdding
 from plone.app.portlets.interfaces import IPortletPermissionChecker
 from plone.app.portlets.browser.adding import PortletAdding
 from plone.portlets.interfaces import IPortletAssignmentMapping
 from plone.portlets.interfaces import IPortletRenderer
 
-from OFS.SimpleItem import SimpleItem
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zExceptions import Unauthorized
+from Acquisition import Implicit
 
 from .i18n import MessageFactory as _
 from .database import Software77GeoDatabase
+
+
+class IEditAssignmentView(Interface):
+    """Marker interface for the assignment edit view."""
 
 
 class IGeoPortlet(IPortletDataProvider):
@@ -188,23 +189,39 @@ class GeoPortletAddForm(base.AddForm):
             lock=1)
 
 
-class GeoPortletEditForm(BrowserView):
+class GeoPortletEditForm(base.EditForm, Implicit):
+    form_fields = form.Fields(IGeoPortlet)
+
+    @property
+    def label(self):
+        return _(
+            u"Edit country and languages settings for \"${title}\" portlet",
+            mapping={'title': self.context.assignment.title}
+            )
+
+
+class GeoPortletEditAssignmentForm(BrowserView):
     def __new__(cls, context, request):
-        # Make sure there's an edit view for this assignment.
+        # Make sure there's an edit view for this assignment,
+        # otherwise, return the country- and languages edit form.
         try:
             getMultiAdapter((context.assignment, request), name="edit")
         except ComponentLookupError:
-            return
+            return GeoPortletEditForm(context, request)
 
         return object.__new__(cls)
 
     def __call__(self):
         form = self.context.assignment.restrictedTraverse('@@edit')
+        alsoProvides(form, IEditAssignmentView)
         return form()
 
     def __of__(self, wrapper):
         return self.context.assignment.restrictedTraverse('edit').\
                __of__(wrapper)
+
+    def browserDefault(self, request):
+        return self, ()
 
 
 class GeoPortletAddingTraverser(object):
