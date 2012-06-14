@@ -3,6 +3,9 @@ Changelog
 
 In next release ....
 
+- Fixed traversal issue that prevented the editing of portlets with a
+  "null" edit-form.
+
 - Fixed security checking issue.
 
 1.0.1 (2012-06-06)

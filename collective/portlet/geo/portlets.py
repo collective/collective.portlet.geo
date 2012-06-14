@@ -28,6 +28,7 @@ from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zExceptions import Unauthorized
 from Acquisition import Implicit
+from Acquisition import ImplicitAcquisitionWrapper
 
 from .i18n import MessageFactory as _
 from .database import Software77GeoDatabase
@@ -192,7 +193,7 @@ class GeoPortletAddForm(base.AddForm):
             lock=1)
 
 
-class GeoPortletEditForm(base.EditForm, Implicit):
+class GeoPortletEditForm(base.EditForm):
     form_fields = form.Fields(IGeoPortlet)
 
     @property
@@ -203,28 +204,15 @@ class GeoPortletEditForm(base.EditForm, Implicit):
             )
 
 
-class GeoPortletEditAssignmentForm(BrowserView):
-    def __new__(cls, context, request):
-        # Make sure there's an edit view for this assignment,
-        # otherwise, return the country- and languages edit form.
-        try:
-            getMultiAdapter((context.assignment, request), name="edit")
-        except ComponentLookupError:
-            return GeoPortletEditForm(context, request)
-
-        return object.__new__(cls)
-
+class GeoPortletEditAssignmentForm(GeoPortletEditForm):
     def __call__(self):
-        form = self.context.assignment.restrictedTraverse('@@edit')
+        try:
+            form = self.context.assignment.restrictedTraverse('@@edit')
+        except AttributeError:
+            return super(GeoPortletEditAssignmentForm, self).__call__()
+
         alsoProvides(form, IEditAssignmentView)
         return form()
-
-    def __of__(self, wrapper):
-        return self.context.assignment.restrictedTraverse('edit').\
-               __of__(wrapper)
-
-    def browserDefault(self, request):
-        return self, ()
 
 
 class GeoPortletAddingTraverser(object):
