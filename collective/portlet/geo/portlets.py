@@ -3,16 +3,19 @@ from zope.interface import alsoProvides
 from zope.interface import Interface
 from zope import schema
 from zope.formlib import form
+
 from zope.component import getUtility
 from zope.component import getMultiAdapter
 from zope.component import ComponentLookupError
-from zope.annotation.interfaces import IAnnotations
-from zope.schema.interfaces import IVocabularyFactory
-from zope.component.hooks import getSite
-from zope.traversing.interfaces import ITraversable
-from zope.publisher.interfaces.http import IHTTPRequest
 from zope.component import adapts
+from zope.component.hooks import getSite
+
+from zope.annotation.interfaces import IAnnotations
+from zope.publisher.interfaces.http import IHTTPRequest
+from zope.schema.interfaces import IVocabularyFactory
 from zope.security.interfaces import IPermission
+from zope.security import checkPermission
+from zope.traversing.interfaces import ITraversable
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
@@ -228,32 +231,17 @@ class GeoPortletAddingTraverser(object):
     implements(ITraversable)
     adapts(IPortletAssignmentMapping, IHTTPRequest)
 
-    permission = "plone.app.portlets.ManagePortlets"
-
     def __init__(self, context, request=None):
         self.context = context
         self.request = request
 
     def traverse(self, name, ignore):
-        permission = getUtility(IPermission, name=self.permission).title
-        required = set(
-            entry['name'] for entry in \
-            self.context.rolesOfPermission(permission)
-            if entry['selected']
-            )
-
-        # This is a cumbersome permissions check, but it's necessary
-        # because the publisher can't help us.
-        for role in self.request.roles:
-            if role in required:
-                break
-        else:
-            raise Unauthorized("Must have permission: '%s'." % permission)
-
         return GeoPortletAdding(self.context, self.request, name)
 
 
 class GeoPortletAdding(PortletAdding):
+    permission = "plone.app.portlets.ManagePortlets"
+
     def __init__(self, context, request, name):
         self.id = "++geoportlet++%s" % name
         countries, languages = name.split(';')
@@ -262,5 +250,9 @@ class GeoPortletAdding(PortletAdding):
         BrowserView.__init__(self, context, request)
 
     def add(self, content):
+        if not checkPermission(self.permission, self.context):
+            permission = getUtility(IPermission, name=self.permission).title
+            raise Unauthorized("Must have permission: '%s'." % permission)
+
         content = GeoPortletAssignment(content, self.countries, self.languages)
         super(GeoPortletAdding, self).add(content)

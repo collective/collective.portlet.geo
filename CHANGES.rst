@@ -1,6 +1,10 @@
 Changelog
 =========
 
+In next release ....
+
+- Fixed security checking issue.
+
 1.0.1 (2012-06-06)
 ------------------
 
