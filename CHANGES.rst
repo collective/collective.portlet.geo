@@ -1,7 +1,8 @@
 Changelog
 =========
 
-In next release ....
+1.0.2 (2012-06-14)
+------------------
 
 - When first creating a geoportlet, use the contained assignment's
   title as the portlet title. This ensures that we get a suitable name
