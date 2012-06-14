@@ -3,6 +3,10 @@ Changelog
 
 In next release ....
 
+- When first creating a geoportlet, use the contained assignment's
+  title as the portlet title. This ensures that we get a suitable name
+  from the ``INameChooser`` adapter.
+
 - Fixed traversal issue that prevented the editing of portlets with a
   "null" edit-form.
 

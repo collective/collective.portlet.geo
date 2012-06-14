@@ -87,6 +87,13 @@ class GeoPortletAssignment(base.Assignment):
 
     @property
     def title(self):
+        # If this assignment hasn't been persisted yet, use the
+        # contained assignment title. This makes sure that we get a
+        # suitable id (not really important, but it makes the URLs
+        # easier to read).
+        if self.assignment is not None and self._p_oid is None:
+            return self.assignment.title
+
         factory = getUtility(
             IVocabularyFactory,
             name="collective.portlet.geo.vocabularies.Countries"
