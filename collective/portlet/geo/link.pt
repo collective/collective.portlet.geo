@@ -5,7 +5,9 @@
     To change these options, visit
     <a i18n:name="link"
        i18n:translate=""
-       tal:attributes="href string:${view/context/absolute_url}/edit-geoportlet?referer=${request/referer|nothing}">
+       tal:define="url view/context/absolute_url;
+                   url python: url.rstrip('/')"
+       tal:attributes="href string:${url}/edit-geoportlet?referer=${request/referer|nothing}">
       edit geoportlet
       </a>.
   </dd>
